@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vue</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <div id="vue">
+      <main>
+        <div class="container">
+          <div class="header">
+            <h1>{{header}}</h1>
+            <button v-if="editing" @click="doEdit(false)" class="cancel">
+              Cancel
+            </button>
+            <button v-else @click="doEdit(true)" class="add">Add Item</button>
+          </div>
+          <div v-if="editing" class="add-form">
+            <input
+              v-model="newItem"
+              @keyup.enter="saveItem"
+              type="text"
+              id="input"
+              placeholder="Add an item"
+            />
+            <p>{{counter}}/200</p>
+
+            <button v-bind:disabled="newItem.length === 0" @click="saveItem">
+              Save Item
+            </button>
+          </div>
+          <p v-if="items.length === 0 ">You've bought all itens!</p>
+          <ul>
+            <!-- usando desestruturação para acessar as propriedades diretamente -->
+            <li v-for="item in reverseItem" key="item.id">{{ item.item }}</li>
+          </ul>
+        </div>
+      </main>
+    </div>
+    <script>
+      const vue = Vue.createApp({
+        data() {
+          return {
+            header: "Shopping List App",
+            items: [
+              // {
+              //   id: 1,
+              //   item: "05 Ps5",
+              // },
+              // {
+              //   id: 2,
+              //   item: "04 Xbox s",
+              // },
+              // {
+              //   id: 3,
+              //   item: "01 Nintendo switch",
+              // },
+            ],
+            newItem: "",
+
+            editing: false,
+          };
+        },
+        methods: {
+          // o this é necessário para referenciar
+          saveItem() {
+            this.items.push({ id: this.items.length + 1, item: this.newItem });
+            this.newItem = "";
+          },
+          doEdit(editing) {
+            this.editing = editing;
+            this.newItem = "";
+          },
+        },
+        computed: {
+          counter() {
+            return this.newItem.length;
+          },
+          reverseItem() {
+            return [...this.items].reverse();
+          },
+        },
+      }).mount("#vue");
+    </script>
+  </body>
+</html>
